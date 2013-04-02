@@ -6,52 +6,58 @@ IRODS_URL=http://de.iplantcollaborative.org/dl/d/9057dba1-70be-4001-8929-3407442
 POSTGRES_DIR=/opt/postgresql
 
 apt-get update
-apt-get install -q -y curl expect make g++
+apt-get install -q -y curl make g++
 
-#Download the irods tarball if it doesn't already exist in the shared
-#directory. This can bypass some SLOOOOW downloads.
-if [ ! -f /vagrant/$IRODS_TGZ ]; then
-    echo "Downloading the iRODS tarball from a Discovery Environment Data Link. This may take a while."
-    curl -s -o $IRODS_TGZ $IRODS_URL
-    echo "Done downloading the iRODS tarball."
+RELOAD=0
 
-    echo "Copying the tarball to the shared directory to prevent further downloads."
-    cp $IRODS_TGZ /vagrant/
-    echo "Done copying the tarball. DON'T CHECK IT IN!"
-else
-    cp /vagrant/$IRODS_TGZ .
+if [ ! -d /opt/$IRODS_DIR ]; then
+    RELOAD=1
 fi
 
-#Clean up the local directory, if necessary.
-if [ -f $IRODS_DIR ]; then
-    rm -rf $IRODS_DIR
+if [ $RELOAD -eq 1 ]; then
+    #Download the irods tarball if it doesn't already exist in the shared
+    #directory. This can bypass some SLOOOOW downloads.
+    if [ ! -f /vagrant/$IRODS_TGZ ]; then
+        echo "Downloading the iRODS tarball from a Discovery Environment Data Link. This may take a while."
+        curl -s -o $IRODS_TGZ $IRODS_URL
+        echo "Done downloading the iRODS tarball."
+
+        echo "Copying the tarball to the shared directory to prevent further downloads."
+        cp $IRODS_TGZ /vagrant/
+        echo "Done copying the tarball. DON'T CHECK IT IN!"
+    else
+        cp /vagrant/$IRODS_TGZ .
+    fi
+
+
+    #Clean up the local directory, if necessary.
+    if [ -f $IRODS_DIR ]; then
+        rm -rf $IRODS_DIR
+    fi
+
+    tar xzf $IRODS_TGZ
+    mv $IRODS_DIR /opt/
+    mkdir $POSTGRES_DIR
+    rm $IRODS_TGZ
+
+    cp /vagrant/irods.config /opt/$IRODS_DIR/config/
+    cp /vagrant/installPostgres.config /opt/$IRODS_DIR/config/
+
+    chown -R vagrant:vagrant /opt/$IRODS_DIR
+    chmod -R a+rx /opt/$IRODS_DIR
+
+    chown -R vagrant:vagrant $POSTGRES_DIR
+    chmod -R a+rx $POSTGRES_DIR
+
+    pushd /opt/$IRODS_DIR/
+    su vagrant -c "./scripts/installPostgres --noask && ./scripts/configure && make && ./scripts/finishSetup --noask"
+    popd
 fi
 
-tar xzf $IRODS_TGZ
 
-#Remove any existing irods directories
-if [ -d /opt/$IRODS_DIR ]; then
-    rm -rf /opt/$IRODS_DIR
+cp /vagrant/irodsrc /home/vagrant/.irods/.irodsrc
+chown vagrant:vagrant /home/vagrant/.irods/.irodsrc
+
+if [ $RELOAD -eq 1 ]; then
+    echo '. /home/vagrant/.irods/.irodsrc' >> /home/vagrant/.bashrc
 fi
-
-if [ -d $POSTGRES_DIR ]; then
-    rm -rf $POSTGRES_DIR
-fi
-
-mv $IRODS_DIR /opt/
-mkdir $POSTGRES_DIR
-rm $IRODS_TGZ
-
-cp /vagrant/irods.config /opt/$IRODS_DIR/config/
-cp /vagrant/installPostgres.config /opt/$IRODS_DIR/config/
-
-chown -R vagrant:vagrant /opt/$IRODS_DIR
-chmod -R a+rx /opt/$IRODS_DIR
-
-chown -R vagrant:vagrant $POSTGRES_DIR
-chmod -R a+rx $POSTGRES_DIR
-
-pushd /opt/$IRODS_DIR/
-su vagrant -c "./scripts/installPostgres --noask && ./scripts/configure && make && ./scripts/finishSetup --noask"
-popd
-

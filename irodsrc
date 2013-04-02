@@ -1,0 +1,3 @@
+IRODS_PATH=/opt/iRODS/clients/icommands/bin
+
+export PATH=$PATH:$IRODS_PATH
