@@ -1,6 +1,6 @@
-## iRODS Vagrant VM
+## iRODS 3.2 Vagrant VM
 
-This project allows users to set up a VM running a basic iRODS install using Vagrant and VirtualBox. This gives users a reproducable iRODS environment to do work against.
+This project allows users to set up a VM running a basic iRODS 3.2 install using Vagrant and VirtualBox. This gives users a reproducable iRODS environment to do work against.
 
 Vagrant - http://www.vagrantup.com/
 
