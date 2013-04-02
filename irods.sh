@@ -50,7 +50,7 @@ if [ $RELOAD -eq 1 ]; then
     chmod -R a+rx $POSTGRES_DIR
 
     pushd /opt/$IRODS_DIR/
-    su vagrant -c "./scripts/installPostgres --noask && ./scripts/configure && make && ./scripts/finishSetup --noask"
+    su vagrant -c "export USE_LOCALHOST=1 && ./scripts/installPostgres --noask && ./scripts/configure && make && ./scripts/finishSetup --noask"
     popd
 fi
 
