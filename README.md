@@ -18,7 +18,7 @@ This project has only been tested on OS X. The VM that is created will run Ubunt
 
 * Run 'vagrant up' in a terminal from inside the cloned repo. 
 
-***WARNING***: your first time running 'vagrant up' will be slow. The first time will download iRODS 3.2 and place the tarball in the local directory inside the cloned repo. Subsequent 'vagrant up' commands will use the downloaded tarball instead of redownloading it.
+***WARNING***: your first time running 'vagrant up' will be slow. The first time will download iRODS 3.2 and place the tarball in the local directory inside the cloned repo. Subsequent 'vagrant up' and 'vagrant reload' commands will use the downloaded tarball instead of redownloading it.
 
 # Notes
 
