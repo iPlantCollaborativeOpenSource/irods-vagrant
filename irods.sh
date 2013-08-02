@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 IRODS_DIR=iRODS
-IRODS_TGZ=irods3.2.tgz
-IRODS_URL=http://de.iplantcollaborative.org/dl/d/9057dba1-70be-4001-8929-34074424fb51/irods3.2.tgz
+IRODS_TGZ=irods3.3.tgz
+IRODS_URL=http://nopcode.org/get/$IRODS_TGZ
 POSTGRES_DIR=/opt/postgresql
 
 apt-get update
+apt-get upgrade -y
 apt-get install -q -y curl make g++
 
 RELOAD=0

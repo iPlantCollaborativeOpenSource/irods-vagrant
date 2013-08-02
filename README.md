@@ -1,12 +1,10 @@
-## iRODS 3.2 Vagrant VM
+## iRODS 3.3 Vagrant VM
 
-This project allows users to set up a VM running a basic iRODS 3.2 install using Vagrant and VirtualBox. This gives users a reproducable iRODS environment to do work against.
+This project allows users to set up a VM running a basic iRODS 3.3 install using <a href="http://www.vagrantup.com/
+">Vagrant</a> and <a href="https://www.virtualbox.org">VirtualBox</a>.
 
-Vagrant - http://www.vagrantup.com/
+This gives users a reproducable iRODS environment to do work against.
 
-VirtualBox - https://www.virtualbox.org/
-
-This project has only been tested on OS X. The VM that is created will run Ubuntu 12.04 LTS.
 
 # Installation
 
@@ -18,7 +16,7 @@ This project has only been tested on OS X. The VM that is created will run Ubunt
 
 * Run 'vagrant up' in a terminal from inside the cloned repo. 
 
-***WARNING***: your first time running 'vagrant up' will be slow. The first time will download iRODS 3.2 and place the tarball in the local directory inside the cloned repo. Subsequent 'vagrant up' and 'vagrant reload' commands will use the downloaded tarball instead of redownloading it.
+***WARNING***: your first time running 'vagrant up' will be slow. The first time will download iRODS 3.3 and place the tarball in the local directory inside the cloned repo. Subsequent 'vagrant up' and 'vagrant reload' commands will use the downloaded tarball instead of redownloading it.
 
 # Starting up iRODS
 
