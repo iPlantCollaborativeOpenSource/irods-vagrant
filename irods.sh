@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
 IRODS_DIR=/var/lib/iRODS
-IRODS_TGZ=irods3.3.tgz
-IRODS_URL=http://nopcode.org/get/$IRODS_TGZ
+IRODS_TGZ=3.3.tgz
+IRODS_URL=https://github.com/irods/irods/archive/$IRODS_TGZ
 
 
 if [ ! -e /home/vagrant/.irodsprovisioned ]; then
