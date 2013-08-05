@@ -32,10 +32,8 @@ if [ ! -e /home/vagrant/.irodsprovisioned ]; then
     su vagrant -c "cd $IRODS_DIR && export USE_LOCALHOST=1 && ./scripts/configure && make && ./scripts/finishSetup --noask"
 
     su vagrant -c "mkdir -p /home/vagrant/.irods"
-    cp /vagrant/irodsrc /home/vagrant/.irods/.irodsrc
-    chown vagrant:vagrant /home/vagrant/.irods/.irodsrc
 
-    echo '. /home/vagrant/.irods/.irodsrc' >> /home/vagrant/.bashrc
+    echo "export PATH=\$PATH:$IRODS_DIR:$IRODS_DIR/clients/icommands/bin" >> /home/vagrant/.bashrc
 
     touch /home/vagrant/.irodsprovisioned
 fi
