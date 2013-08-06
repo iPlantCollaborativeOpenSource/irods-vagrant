@@ -1,63 +1,43 @@
-#!/usr/bin/env bash
+#!/bin/bash -x
 
-IRODS_DIR=iRODS
-IRODS_TGZ=irods3.2.tgz
-IRODS_URL=http://de.iplantcollaborative.org/dl/d/9057dba1-70be-4001-8929-34074424fb51/irods3.2.tgz
-POSTGRES_DIR=/opt/postgresql
-
-apt-get update
-apt-get install -q -y curl make g++
-
-RELOAD=0
-
-if [ ! -d /opt/$IRODS_DIR ]; then
-    RELOAD=1
-fi
-
-if [ $RELOAD -eq 1 ]; then
-    #Download the irods tarball if it doesn't already exist in the shared
-    #directory. This can bypass some SLOOOOW downloads.
-    if [ ! -f /vagrant/$IRODS_TGZ ]; then
-        echo "Downloading the iRODS tarball from a Discovery Environment Data Link. This may take a while."
-        curl -s -o $IRODS_TGZ $IRODS_URL
-        echo "Done downloading the iRODS tarball."
-
-        echo "Copying the tarball to the shared directory to prevent further downloads."
-        cp $IRODS_TGZ /vagrant/
-        echo "Done copying the tarball. DON'T CHECK IT IN!"
-    else
-        cp /vagrant/$IRODS_TGZ .
-    fi
+IRODS_DIR=/var/lib/iRODS
+IRODS_TGZ=3.3.tar.gz
+IRODS_URL=https://github.com/irods/irods/archive/$IRODS_TGZ
 
 
-    #Clean up the local directory, if necessary.
-    if [ -f $IRODS_DIR ]; then
-        rm -rf $IRODS_DIR
-    fi
+if [ ! -e /home/vagrant/.irodsprovisioned ]; then
+    apt-get update
+    apt-get upgrade -y
+    apt-get install -q -y curl build-essential python-pip git python-dev postgresql odbc-postgresql unixodbc-dev
 
+    cd /var/lib
+
+    wget -q $IRODS_URL
     tar xzf $IRODS_TGZ
-    mv $IRODS_DIR /opt/
-    mkdir $POSTGRES_DIR
-    rm $IRODS_TGZ
 
-    cp /vagrant/irods.config /opt/$IRODS_DIR/config/
-    cp /vagrant/installPostgres.config /opt/$IRODS_DIR/config/
+    # Fix directories from tar.gz from GitHub
+    mv irods-*/iRODS .
+    rm -rf irods-*
 
-    chown -R vagrant:vagrant /opt/$IRODS_DIR
-    chmod -R a+rx /opt/$IRODS_DIR
+    cp /vagrant/irods.config $IRODS_DIR/config/
 
-    chown -R vagrant:vagrant $POSTGRES_DIR
-    chmod -R a+rx $POSTGRES_DIR
+    chown -R vagrant:vagrant $IRODS_DIR
+    chmod -R a+rx $IRODS_DIR
 
-    pushd /opt/$IRODS_DIR/
-    su vagrant -c "export USE_LOCALHOST=1 && ./scripts/installPostgres --noask && ./scripts/configure && make && ./scripts/finishSetup --noask"
-    popd
-fi
+    # Use system-wide postgresql for iRODS
+    echo "CREATE ROLE vagrant PASSWORD 'md5ce5f2d27bc6276a03b0328878c1dc0e2' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;" | su - postgres -c psql -
+    # psql createuser does not allow password via cmdline
+    #su postgres -c "createuser vagrant -s -w"
 
+    cp /vagrant/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
+    ln -sf /usr/lib/x86_64-linux-gnu/odbc/psqlodbca.so /usr/lib/postgresql/9.1/lib/libodbcpsql.so
+    service postgresql restart
 
-cp /vagrant/irodsrc /home/vagrant/.irods/.irodsrc
-chown vagrant:vagrant /home/vagrant/.irods/.irodsrc
+    su vagrant -c "cd $IRODS_DIR && export USE_LOCALHOST=1 && ./scripts/configure && make && ./scripts/finishSetup --noask"
 
-if [ $RELOAD -eq 1 ]; then
-    echo '. /home/vagrant/.irods/.irodsrc' >> /home/vagrant/.bashrc
+    su vagrant -c "mkdir -p /home/vagrant/.irods"
+
+    echo "export PATH=\$PATH:$IRODS_DIR:$IRODS_DIR/clients/icommands/bin" >> /home/vagrant/.bashrc
+
+    touch /home/vagrant/.irodsprovisioned
 fi
