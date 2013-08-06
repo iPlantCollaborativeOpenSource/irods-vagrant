@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 IRODS_DIR=/var/lib/iRODS
-IRODS_TGZ=3.3.tgz
+IRODS_TGZ=3.3.tar.gz
 IRODS_URL=https://github.com/irods/irods/archive/$IRODS_TGZ
 
 
@@ -11,9 +11,13 @@ if [ ! -e /home/vagrant/.irodsprovisioned ]; then
     apt-get install -q -y curl build-essential python-pip git python-dev postgresql odbc-postgresql unixodbc-dev
 
     cd /var/lib
-    curl -s -o $IRODS_TGZ $IRODS_URL
 
+    wget -q $IRODS_URL
     tar xzf $IRODS_TGZ
+
+    # Fix directories from tar.gz from GitHub
+    mv irods-*/iRODS .
+    rm -rf irods-*
 
     cp /vagrant/irods.config $IRODS_DIR/config/
 
