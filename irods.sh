@@ -2,13 +2,13 @@
 
 IRODS_DIR=/var/lib/iRODS
 IRODS_TGZ=3.3.tar.gz
-IRODS_URL=https://github.com/irods/irods/archive/$IRODS_TGZ
+IRODS_URL=https://github.com/irods/irods-legacy/archive/$IRODS_TGZ
 
 
 if [ ! -e /home/vagrant/.irodsprovisioned ]; then
     apt-get update
     apt-get upgrade -y
-    apt-get install -q -y curl build-essential python-pip git python-dev postgresql odbc-postgresql unixodbc-dev
+    apt-get install -q -y curl build-essential python-pip git python-dev postgresql odbc-postgresql unixodbc-dev language-pack-en
 
     cd /var/lib
 
@@ -32,12 +32,17 @@ if [ ! -e /home/vagrant/.irodsprovisioned ]; then
     cp /vagrant/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
     ln -sf /usr/lib/x86_64-linux-gnu/odbc/psqlodbca.so /usr/lib/postgresql/9.1/lib/libodbcpsql.so
     service postgresql restart
+    sleep 5
 
     su vagrant -c "cd $IRODS_DIR && export USE_LOCALHOST=1 && ./scripts/configure && make && ./scripts/finishSetup --noask"
+    RESULT=$?
 
     su vagrant -c "mkdir -p /home/vagrant/.irods"
 
     echo "export PATH=\$PATH:$IRODS_DIR:$IRODS_DIR/clients/icommands/bin" >> /home/vagrant/.bashrc
+    if [ "$RESULT" != "0" ]; then
+        su vagrant -c "cd $IRODS_DIR && (yes | ./irodssetup)"
+    fi
 
     touch /home/vagrant/.irodsprovisioned
 fi
