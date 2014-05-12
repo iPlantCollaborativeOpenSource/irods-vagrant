@@ -1,17 +1,53 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant::Config.run do |config|
-  # All Vagrant configuration is done here. The most common configuration
-  # options are documented and commented below. For a complete reference,
-  # please see the online documentation at vagrantup.com.
+# Please upgrade Vagrant from:
+#     https://www.vagrantup.com/downloads.html
+# Please install an optional but recommended plugin:
+#     vagrant plugin install vagrant-cachier
 
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ubuntu-14.04"
+# Ubuntu note: The repository version of vagrant for Ubuntu
+# 14.04 provides ruby 1.9 which does not enable the
+# recommended plugin vagrant-cachier. The download
+# version of vagrant provides ruby 2 which does.
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/trusty/current/trusty-server-cloudimg-amd64-vagrant-disk1.box"
+# Vagrant 1.5 provides Ruby 2.x and changes config.vm.box
+# and `vagrant box add` to support "ubuntu/trusty64"
+# without need for a box_url.
+Vagrant.require_version ">= 1.5"
+
+# Vagrantfile API version 2 is the better developed and
+# documented version since Vagrant 1.1.
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  # See documentation for configuring a Vagrantfile: vagrantup.com
+  config.vm.box = "ubuntu/trusty64"
+
+  if Vagrant.has_plugin?("vagrant-cachier")
+    # Configure cached packages to be shared between instances
+    # of the same base box: 
+    config.cache.scope = :box
+    # You may consider setting: config.cache.synced_folder_opts
+    # For more information please check:
+    # http://fgrehm.viewdocs.io/vagrant-cachier/usage
+    # http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
+  end
+
+  # Forward a port from the guest to the host, which allows for outside
+  # computers to access the VM, whereas host only networking does not.
+  config.vm.network "forwarded_port", guest: 1247, host: 1247
+
+  config.vm.provision "shell", path: "irods.sh"
+end
+
+Vagrant.configure("1") do |config|
+  # Retains only documentation from earlier revisions of this file.
+  # If you wish to use any features documented here, you must
+  # either use them within a configure("1") section such as
+  # this very section is, or else consult the current documentation
+  # to find out how to access the equivalent features in a
+  # configure("2") section: https://docs.vagrantup.com/v2/
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -27,17 +63,10 @@ Vagrant::Config.run do |config|
   # physical device on your network.
   # config.vm.network :bridged
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host only networking does not.
-  config.vm.forward_port 1247, 1247
-
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
   # config.vm.share_folder "v-data", "/vagrant_data", "../data"
-
-
-  config.vm.provision :shell, :path => "irods.sh"
 
   # Enable provisioning with Puppet stand alone.  Puppet manifests
   # are contained in a directory path relative to this Vagrantfile.
@@ -61,6 +90,20 @@ Vagrant::Config.run do |config|
   #   puppet.manifests_path = "manifests"
   #   puppet.manifest_file  = "base.pp"
   # end
+
+  # Forward a port from the guest to the host, which allows for outside
+  # computers to access the VM, whereas host only networking does not.
+  # config.vm.forward_port 1247, 1247
+ 
+  # Share an additional folder to the guest VM. The first argument is
+  # an identifier, the second is the path on the guest to mount the
+  # folder, and the third is the path on the host to the actual folder.
+  # config.vm.share_folder "v-data", "/vagrant_data", "../data"
+
+
+  # config.vm.provision :shell, :path => "irods.sh"
+ 
+
 
   # Enable provisioning with chef solo, specifying a cookbooks path, roles
   # path, and data_bags path (all relative to this Vagrantfile), and adding 
