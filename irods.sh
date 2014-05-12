@@ -29,8 +29,8 @@ if [ ! -e /home/vagrant/.irodsprovisioned ]; then
     # psql createuser does not allow password via cmdline
     #su postgres -c "createuser vagrant -s -w"
 
-    cp /vagrant/pg_hba.conf /etc/postgresql/9.1/main/pg_hba.conf
-    ln -sf /usr/lib/x86_64-linux-gnu/odbc/psqlodbca.so /usr/lib/postgresql/9.1/lib/libodbcpsql.so
+    cp /vagrant/pg_hba.conf /etc/postgresql/9.3/main/pg_hba.conf
+    ln -sf /usr/lib/x86_64-linux-gnu/odbc/psqlodbca.so /usr/lib/postgresql/9.3/lib/libodbcpsql.so
     service postgresql restart
     sleep 5
 
