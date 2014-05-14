@@ -1,2 +1,0 @@
-export PATH=$PATH:/var/lib/iRODS:/var/lib/iRODS/clients/icommands/bin
-
