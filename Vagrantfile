@@ -38,7 +38,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host-only networking does not.
   config.vm.network "forwarded_port", guest: 1247, host: 1247
-  config.vm.network "forwarded_port", guest: 22, host: 2222
+  config.vm.network "forwarded_port", guest: 22, host: 50022
 
   config.vm.provision "shell", path: "irods.sh"
 end
