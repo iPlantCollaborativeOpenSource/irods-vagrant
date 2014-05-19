@@ -1,9 +1,9 @@
-## iRODS 3.3 Vagrant VM
+## iRODS 4.0 Vagrant VM
 
-This project allows users to set up a VM running a basic `community` iRODS 3.3 install using <a href="http://www.vagrantup.com/
+This project allows users to set up a VM running a basic `community` iRODS 4.0 install using <a href="http://www.vagrantup.com/
 ">Vagrant</a> and <a href="https://www.virtualbox.org">VirtualBox</a>.
 
-This gives users a reproducable iRODS environment to do work against.
+This gives users a reproducible iRODS environment to do work against.
 
 
 # Installation
@@ -30,7 +30,7 @@ This gives users a reproducable iRODS environment to do work against.
 
 * The iRODS username is 'rods'. The password is 'rods'. The zone is 'tempZone'.
 
-* iRODS is not running when the VM is created.
+* iRODS is running when the VM is created. This behavior is a change from the iRODS 3.3 Vagrant VM.
 
 * Don't run this VM in production.
 
