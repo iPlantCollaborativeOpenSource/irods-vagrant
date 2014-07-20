@@ -1,7 +1,7 @@
-## iRODS 4.0 Vagrant VM
+## iRODS 4.0 Vagrant Cluster
 
-This project allows users to set up a VM running a basic `community` iRODS 4.0 install using <a href="http://www.vagrantup.com/
-">Vagrant</a> and <a href="https://www.virtualbox.org">VirtualBox</a>.
+This project allows users to set up a basic `community` iRODS 4.0 cluster using <a href="http://www.vagrantup.com/
+">Vagrant</a> and <a href="https://www.virtualbox.org">VirtualBox</a>. The cluster is set up with one metadata (iCAT) server and two resource servers.
 
 This gives users a reproducible iRODS environment to do work against.
 
@@ -17,11 +17,13 @@ This gives users a reproducible iRODS environment to do work against.
 * Run 'vagrant up' in a terminal from inside the cloned repo. 
 
 
-# Starting up iRODS
+# Using iRODS
 
-* In a terminal in the cloned directory, run 'vagrant ssh'. This will ssh into the running VM.
+* In a terminal in the cloned directory, run 'vagrant ssh icat'. This will ssh into the running VM for the iCAT server.
 
-* Run 'irodsctl start' to start up iRODS and use the `i-commands`.
+* Change to the `irods` user with `sudo su - irods`.
+
+* You can now use iRODS commands such as `ils`, `icd` and `iput`.
 
 
 # Notes

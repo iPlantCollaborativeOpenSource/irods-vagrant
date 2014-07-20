@@ -35,10 +35,27 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # http://docs.vagrantup.com/v2/synced-folders/basic_usage.html
   end
 
-  # Forward a port from the guest to the host, which allows for outside
-  # computers to access the VM, whereas host-only networking does not.
-  config.vm.network "forwarded_port", guest: 1247, host: 1247
-  config.vm.network "forwarded_port", guest: 22, host: 50022
+  config.vm.provision "shell", path: "set_hosts.sh"
 
-  config.vm.provision "shell", path: "irods.sh"
+  config.vm.define "icat" do |icat|
+    icat.vm.hostname = "icat"
+    icat.vm.provision "shell", path: "icat.sh"
+    # Forward a port from the guest to the host, which allows for outside
+    # computers to access the VM, whereas host-only networking does not.
+    icat.vm.network "forwarded_port", guest: 1247, host: 1247
+    icat.vm.network "forwarded_port", guest: 22, host: 50022
+    icat.vm.network "private_network", ip: "192.168.50.10"
+  end
+
+  config.vm.define "ires1" do |ires1|
+    ires1.vm.hostname = "ires1"
+    ires1.vm.provision "shell", path: "ires.sh"
+    ires1.vm.network "private_network", ip: "192.168.50.11"
+  end
+
+  config.vm.define "ires2" do |ires2|
+    ires2.vm.hostname = "ires2"
+    ires2.vm.provision "shell", path: "ires.sh"
+    ires2.vm.network "private_network", ip: "192.168.50.12"
+  end
 end

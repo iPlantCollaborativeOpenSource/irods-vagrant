@@ -20,8 +20,10 @@ if [ ! -e $IRODS_HOME/.irodsprovisioned ]; then
     dpkg -i $IRODS_DEB $PLUGIN_DEB
 
     su -c 'mkdir /tmp/irods' - irods
+    # Instructs the setup script to pull default values
+    # from irods.config
     su -c 'touch /tmp/irods/setup_database.flag' - irods
-    cp /vagrant/irods.config /etc/irods/irods.config
+    cp /vagrant/icat.config /etc/irods/irods.config
 
     # Use system-wide postgresql for iRODS
     echo "CREATE ROLE vagrant PASSWORD 'md5ce5f2d27bc6276a03b0328878c1dc0e2' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;" | su - postgres -c psql -
