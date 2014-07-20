@@ -19,7 +19,7 @@ This gives users a reproducible iRODS environment to do work against.
 
 # Using iRODS
 
-* In a terminal in the cloned directory, run 'vagrant ssh'. This will ssh into the running VM.
+* In a terminal in the cloned directory, run 'vagrant ssh icat'. This will ssh into the running VM for the iCAT server.
 
 * Change to the `irods` user with `sudo su - irods`.
 
