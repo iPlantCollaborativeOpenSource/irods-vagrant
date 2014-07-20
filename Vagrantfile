@@ -58,8 +58,4 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     ires2.vm.provision "shell", path: "ires.sh"
     ires2.vm.network "private_network", ip: "192.168.50.12"
   end
-
-  config.vm.provider :virtualbox do |vb|
-    vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
-  end
 end
