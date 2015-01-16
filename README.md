@@ -1,12 +1,15 @@
-## iRODS 4.0 Vagrant VM
+## iRODS 4.0.3 Vagrant VM
 
-This project allows users to set up a VM running a basic `community` iRODS 4.0 install using <a href="http://www.vagrantup.com/
-">Vagrant</a> and <a href="https://www.virtualbox.org">VirtualBox</a>.
+This project allows users to set up a VM running a basic `community` iRODS 4.0.3 install using 
+<a href="http://www.vagrantup.com/">Vagrant</a> and 
+<a href="https://www.virtualbox.org">VirtualBox</a>.
 
 This gives users a reproducible iRODS environment to do work against.
 
 
 # Installation
+
+* Ensure VT-x/AMD-V acceleration is enabled in your BIOS if applicable.
 
 * Install VirtualBox following the instructions at the VirtualBox site listed above.
 
